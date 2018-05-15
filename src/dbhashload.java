@@ -11,7 +11,7 @@ public class dbhashload {
 	public static final Integer INITIAL = 0;
 	public static final int BUSINESS_NAME_FIELD = 2;
 	
-	private static HashMap<String, ArrayList<String>> hashIndexMap;
+	private static HashMap<Integer, ArrayList<String>> hashIndexMap;
 	public static void main(String[] args) {
 		hashIndexMap = new HashMap<>();
 		if (args.length == 1)
@@ -25,7 +25,7 @@ public class dbhashload {
 				read(file, Integer.parseInt(args[0]));
 				long time = System.currentTimeMillis() - start;
 				System.out.println("Time (ms):"+time);
-				for(Map.Entry<String,ArrayList<String>> entry: hashIndexMap.entrySet())
+				for(Map.Entry<Integer,ArrayList<String>> entry: hashIndexMap.entrySet())
 				{
 					System.out.println(entry.getKey() + " : " + entry.getValue());
 				}
@@ -75,10 +75,11 @@ public class dbhashload {
             		if(len>BUSINESS_NAME_FIELD) 
             		{
                 		String strUpper = strSplit[2].toUpperCase();
+                		int keyHash = strUpper.hashCode();
             			ArrayList<String> valueList = new ArrayList<>();
             			String value = Integer.toString(i);
             			valueList.add(value);
-            			hashIndexMap.put(strUpper, valueList);
+            			hashIndexMap.put(keyHash, valueList);
             		}  
             	}
             }  
