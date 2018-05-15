@@ -61,7 +61,7 @@ public class dbquery {
 	//read in file and check query
 	public static void read(File file, String query, int size) 
 	{
-		String queryLower = query.toLowerCase();
+		String queryLower = query.toUpperCase();
 		byte[] heapPage = new byte[size];
 		String heapStr = null;
 		ArrayList<String> endStr = new ArrayList<String>();
@@ -81,7 +81,7 @@ public class dbquery {
 		        	String[] strSplit = str.split("\t");
 		        	for(String word : strSplit)
 		        	{
-		        		String newWord = word.toLowerCase();
+		        		String newWord = word.toUpperCase();
 			        	if(newWord.contains(queryLower)) 
 			        	{
 			        		check = true;
