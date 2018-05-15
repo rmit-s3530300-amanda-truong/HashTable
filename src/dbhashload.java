@@ -1,12 +1,16 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class dbhashload {
 	public static final String HEAP_FNAME = "heap.";
+	public static final String HASH_FNAME = "hash.";
 	public static final int FINAL_SIZE = 2500000;
 	public static final Integer INITIAL = 0;
 	public static final int BUSINESS_NAME_FIELD = 2;
@@ -23,6 +27,7 @@ public class dbhashload {
 				File file = new File(heapOutputName);
 				long start = System.currentTimeMillis();
 				read(file, Integer.parseInt(args[0]));
+				writeToOutput(args[0]);
 				long time = System.currentTimeMillis() - start;
 				System.out.println("Time (ms):"+time);
 				for(Map.Entry<Integer,ArrayList<String>> entry: hashIndexMap.entrySet())
@@ -51,6 +56,33 @@ public class dbhashload {
 			e.printStackTrace();
 		}
 		return isValidInt;
+	}
+	
+	public static void writeToOutput(String args)
+	{
+        PrintWriter os = null;
+        String hashOutput = HASH_FNAME + args;
+        try 
+        {
+         os = new PrintWriter(hashOutput, "UTF-8");
+        }
+        catch (FileNotFoundException | UnsupportedEncodingException e) 
+        {
+        	e.printStackTrace();
+        } 
+		for(Map.Entry<Integer,ArrayList<String>> entry: hashIndexMap.entrySet())
+		{
+			ArrayList<String> val = entry.getValue();
+			if(!val.isEmpty())
+			{
+				for(String s: val)
+				{
+	            	os.print(s +" ");	
+				}
+	            os.println();
+			}
+		}        
+        os.close();
 	}
 	
 	public static void read(File file, int size)
