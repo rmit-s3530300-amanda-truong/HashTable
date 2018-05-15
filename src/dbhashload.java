@@ -88,10 +88,20 @@ public class dbhashload {
             	        	System.out.println("doesnt fits");
             	        	System.out.println(keyHash);
             	        }
-            			ArrayList<String> valueList = new ArrayList<>();
-            			String value = Integer.toString(i);
-            			valueList.add(value);
-            			hashIndexMap.put(keyHash, valueList);
+            	        if(hashIndexMap.get(keyHash) == null)
+            	        {
+            	        	ArrayList<String> valueList = new ArrayList<String>();
+                			String value = Integer.toString(i);
+                			valueList.add(value);
+                			hashIndexMap.put(keyHash, valueList);
+            	        }
+            	        else
+            	        {
+                	        ArrayList<String> valueList = hashIndexMap.get(keyHash);
+                			String value = Integer.toString(i);
+                			valueList.add(value);
+                			hashIndexMap.put(keyHash, valueList);
+            	        }
             		}  
             	}
             }  
