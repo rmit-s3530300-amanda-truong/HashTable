@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 public class dbquery {
 	public static final String HEAP_FNAME = "heap.";
@@ -42,11 +43,14 @@ public class dbquery {
 	}
 	
 	//print out result of whether query was found or not
-	public static void printCheck(boolean check, String str)
+	public static void printCheck(boolean check, ArrayList<String> str)
 	{
-		if(check && str != null)
+		if(check && !str.isEmpty())
 		{
-    		System.out.println("Has Found: "+str);
+			for(String s: str)
+			{
+	    		System.out.println("Has Found: "+str);
+			}
 		}
 		else
 		{
@@ -60,7 +64,7 @@ public class dbquery {
 		String queryLower = query.toLowerCase();
 		byte[] heapPage = new byte[size];
 		String heapStr = null;
-		String endStr = null;
+		ArrayList<String> endStr = new ArrayList<String>();
 		boolean check = false;
 		// use RandomAccessFile to open file
 		try (RandomAccessFile fileContent = new RandomAccessFile(file, "r")) 
@@ -74,14 +78,14 @@ public class dbquery {
 		        String[] heapArr = heapStr.split(":");
 		        for(String str : heapArr) 
 		        {
-		        	String[] tokSplit = str.split("\t");
-		        	for(String word : tokSplit)
+		        	String[] strSplit = str.split("\t");
+		        	for(String word : strSplit)
 		        	{
 		        		String newWord = word.toLowerCase();
 			        	if(newWord.contains(queryLower)) 
 			        	{
 			        		check = true;
-			        		endStr = str;
+			        		endStr.add(str);
 			        	}
 		        	}
 		        }
