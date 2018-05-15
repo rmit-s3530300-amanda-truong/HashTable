@@ -76,6 +76,18 @@ public class dbhashload {
             		{
                 		String strUpper = strSplit[2].toUpperCase();
                 		int keyHash = strUpper.hashCode();
+            	        keyHash = keyHash%FINAL_SIZE;
+            	        if(keyHash>INITIAL)
+            	        {
+            	        	System.out.println("fits");
+            	        	System.out.println(keyHash);
+            	        }
+            	        else
+            	        {
+            	        	keyHash = keyHash+FINAL_SIZE;	
+            	        	System.out.println("doesnt fits");
+            	        	System.out.println(keyHash);
+            	        }
             			ArrayList<String> valueList = new ArrayList<>();
             			String value = Integer.toString(i);
             			valueList.add(value);
