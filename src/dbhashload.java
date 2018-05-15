@@ -38,7 +38,7 @@ public class dbhashload {
 		}
 		else
 		{
-			System.out.println("Error: only pass in two arguments");
+			System.out.println("Error: only pass in one arguments");
 		}
 
 	}
@@ -77,7 +77,7 @@ public class dbhashload {
 			{
 				for(String s: val)
 				{
-	            	os.print(s +" ");	
+	            	os.print(s + " ");	
 				}
 	            os.println();
 			}
