@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class dbhashload {
+public class hashload {
 	public static final String HEAP_FNAME = "heap.";
 	public static final String HASH_FNAME = "hash.";
-	public static final int FINAL_SIZE = 2500000;
+	public static final int FINAL_SIZE = 2000000;
 	public static final Integer INITIAL = 0;
 	public static final int BUSINESS_NAME_FIELD = 2;
 	
@@ -111,28 +111,33 @@ public class dbhashload {
             	        keyHash = keyHash%FINAL_SIZE;
             	        if(keyHash>INITIAL)
             	        {
-            	        	System.out.println("fits");
-            	        	System.out.println(keyHash);
+//            	        	System.out.println("fits");
+//            	        	System.out.println(keyHash);
             	        }
             	        else
             	        {
             	        	keyHash = keyHash+FINAL_SIZE;	
-            	        	System.out.println("doesnt fits");
-            	        	System.out.println(keyHash);
-            	        }
+//            	        	System.out.println("doesnt fits");
+//            	        	System.out.println(keyHash);
+            	        }     
+            	        System.out.println(strUpper + " : " + keyHash);
             	        if(hashIndexMap.get(keyHash) == null)
             	        {
+            	        	System.out.println("null" + keyHash);
             	        	ArrayList<String> valueList = new ArrayList<String>();
                 			String value = Integer.toString(i);
                 			valueList.add(value);
                 			hashIndexMap.put(keyHash, valueList);
+                			System.out.println("null" + valueList);
             	        }
             	        else
             	        {
+               	        	System.out.println("not null" + keyHash);
                 	        ArrayList<String> valueList = hashIndexMap.get(keyHash);
                 			String value = Integer.toString(i);
                 			valueList.add(value);
                 			hashIndexMap.put(keyHash, valueList);
+                			System.out.println("not null" + valueList);
             	        }
             		}  
             	}
