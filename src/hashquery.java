@@ -1,10 +1,11 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class hashquery {
+	public static final String HEAP_FNAME = "heap.";
 	public static final String HASH_FNAME = "hash.";
 	public static final int FINAL_SIZE = 2500000;
 	public static final Integer INITIAL = 0;
@@ -16,8 +17,6 @@ public class hashquery {
 		int count = 0;
 		for(int i=0; i<=validArg; i++)
 		{
-			System.out.println(args[i]);
-			System.out.println(isInteger(args[i]));
 			if(isInteger(args[i]))
 			{
 				size = args[i];
@@ -25,10 +24,12 @@ public class hashquery {
 			}
 			else
 			{
+				//if its the first query word no need for space
 				if(count == 0)
 				{
 					queryStr = queryStr + args[i];
 				}
+				//add space if its more than one word 
 				else
 				{
 					queryStr = queryStr + " " + args[i];
@@ -36,11 +37,8 @@ public class hashquery {
 				count++;
 			}
 		}
-		System.out.println(queryStr);
         String hashOutputName = HASH_FNAME+sizeInt;
         File file = new File(hashOutputName);
-//		System.out.println(file);
-        System.out.println(args[0]);
 		long start = System.currentTimeMillis();
 		read(file,queryStr.toUpperCase(), sizeInt);
 		long time = System.currentTimeMillis() - start;
@@ -64,9 +62,9 @@ public class hashquery {
 	}
 	
 	public static void read(File file, String queryStr, int size)
-	{
-		String foundKey = null;
-		
+	{	
+        String heapOutput = HEAP_FNAME + size;
+        File heapFile = new File(heapOutput);
 		//hash query to find match
 		int keyHash = queryStr.hashCode();
         keyHash = keyHash%FINAL_SIZE;
@@ -81,20 +79,46 @@ public class hashquery {
 //        	System.out.println("doesnt fits");
 //        	System.out.println(keyHash);
         }
-        System.out.println(keyHash);
+
 		//attempt to find the hash file and open
-        FileReader fReader;
 		try 
 		{
-			fReader = new FileReader(file);
-			BufferedReader bReader = new BufferedReader(fReader);        
-	        for(int i=0; i<keyHash; i++)
+			//open hash file
+			FileReader fReader = new FileReader(file);
+	        BufferedReader bReader = new BufferedReader(fReader);
+	        //read the line with the keyHash
+	        for(int x=0; x<keyHash; x++)
 	        {
 	        	bReader.readLine();
 	        }
-	        foundKey = bReader.readLine();
-	        System.out.println(foundKey);
-	        searchMatch(foundKey);
+	        String line = bReader.readLine();
+	        bReader.close();
+	        //if line is not null
+	        if(line.length() > 1)
+	        {
+	            String pNo = null; 
+	            String foundKey = null;
+	        	String[] keySplit = line.split(" ");
+	            for(int i=0; i<keySplit.length; i++) 
+	            {
+	            	//get the page number
+	            	pNo = keySplit[i];
+	                //see if query matches key
+	                foundKey = searchKey(heapFile, pNo, size, queryStr, foundKey);
+	            }
+	            if(foundKey == null) 
+	            {
+	                System.out.println("Not found");
+	            } 
+	            else 
+	            {
+	                System.out.println("Found" + foundKey);    
+	            }
+	        }
+	        else
+	        {
+	        	System.out.println("Not found");
+	        }
 		} 
 		catch (IOException e) 
 		{
@@ -102,8 +126,53 @@ public class hashquery {
 		}     
 	}
 	
-	public static void searchMatch(String foundKey)
+	public static String searchKey(File heapFile, String pNo, int size, String queryStr, String foundKey)
 	{
-		
+		boolean continueCheck = true;
+		String queryLower = queryStr.toUpperCase();
+        byte[] heapPage = new byte[size];
+        try (RandomAccessFile busfile = new RandomAccessFile(heapFile, "r")) 
+        {
+        	int pNoInt = Integer.parseInt(pNo);
+        	int bytePNo = pNoInt * size;
+            busfile.skipBytes(bytePNo);
+            long busSize = busfile.length() / size;
+            for (int x=pNoInt; x<busSize; x++) 
+            {            		
+            	String heapStr = null;
+            	//read page
+            	busfile.readFully(heapPage);
+            	//create string from read page
+            	heapStr = new String(heapPage);
+                //record delim
+                String[] heapArr = heapStr.split(":");
+                for(String str : heapArr) 
+                {
+                	if(continueCheck)
+                	{
+                		//word delim
+                    	String[] strSplit = str.split("\t");
+                        for(String word : strSplit)
+                        {
+                        	if(continueCheck)
+                        	{
+                            	//check if query matches
+                            	String newWord = word.toUpperCase();
+                                if(newWord.contains(queryLower)) 
+                                {
+                                    foundKey = str;
+                                    continueCheck = false;
+                                }	
+                        	}
+                        }	
+                	}
+                }
+            }  
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+        return foundKey;
 	}
 }
