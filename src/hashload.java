@@ -71,12 +71,11 @@ class HashIndex
 		String hashIndex;
 		String bucketVal;
 		HashBucket valNext;
-
 	    HashBucket(String hashIndex, String bucketVal) 
 	    {
-	        this.valNext = null;
 	        this.hashIndex = hashIndex;
 	        this.bucketVal = bucketVal;
+	        this.valNext = null;
 	    }
 	}
 }
@@ -98,7 +97,6 @@ public class hashload {
 				File file = new File(heapOutputName);
 				long start = System.currentTimeMillis();
 				read(file, Integer.parseInt(args[0]));
-//				writeToOutput(args[0]);
 				table.outputHash(HASH_FNAME+args[0]);
 				long time = System.currentTimeMillis() - start;
 				System.out.println("Time (ms):"+time);
@@ -108,7 +106,6 @@ public class hashload {
 		{
 			System.out.println("Error: only pass in one arguments");
 		}
-
 	}
 	
 	public static HashIndex createTable()
@@ -132,21 +129,6 @@ public class hashload {
 		return isValidInt;
 	}
 	
-	public static void writeToOutput(String args)
-	{
-        PrintWriter os = null;
-        String hashOutput = HASH_FNAME + args;
-        try 
-        {
-         os = new PrintWriter(hashOutput, "UTF-8");
-        }
-        catch (FileNotFoundException | UnsupportedEncodingException e) 
-        {
-        	e.printStackTrace();
-        }      
-        os.close();
-	}
-	
 	public static void read(File file, int size)
 	{
 		HashIndex table = createTable();
@@ -161,7 +143,7 @@ public class hashload {
             {
             	fileContent.readFully(heapPage);
             	heapStr = new String(heapPage);
-//		        System.out.println(heapStr);
+		        //System.out.println(heapStr);
             	String[] heapArr= heapStr.split(":");
             	for(String str : heapArr) 
             	{
@@ -174,14 +156,14 @@ public class hashload {
             	        keyHash = keyHash%FINAL_SIZE;
             	        if(keyHash>INITIAL)
             	        {
-//            	        	System.out.println("fits");
-//            	        	System.out.println(keyHash);
+            	        	//System.out.println("fits");
+            	        	//System.out.println(keyHash);
             	        }
             	        else
             	        {
             	        	keyHash = keyHash+FINAL_SIZE;	
-//            	        	System.out.println("doesnt fits");
-//            	        	System.out.println(keyHash);
+            	        	//System.out.println("doesnt fits");
+            	        	//System.out.println(keyHash);
             	        }     
             	        table.add(keyHash, Integer.toString(i));
             		}  

@@ -56,7 +56,7 @@ public class hashquery {
 		}
 		catch (NumberFormatException e)
 		{
-//			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return isValidInt;
 	}
@@ -70,14 +70,14 @@ public class hashquery {
         keyHash = keyHash%FINAL_SIZE;
         if(keyHash>INITIAL)
         {
-//        	System.out.println("fits");
-//        	System.out.println(keyHash);
+        	//System.out.println("fits");
+        	//System.out.println(keyHash);
         }
         else
         {
         	keyHash = keyHash+FINAL_SIZE;	
-//        	System.out.println("doesnt fits");
-//        	System.out.println(keyHash);
+        	//System.out.println("doesnt fits");
+        	//System.out.println(keyHash);
         }
 
 		//attempt to find the hash file and open
